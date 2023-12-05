@@ -21,7 +21,7 @@ class Game:
         self.b = 0
         self.is_possible = False
 
-    def play_set(self,color : RGB,amount : int):
+    def play_highest_set(self,color : RGB,amount : int):
         if color == RGB.RED and self.r > amount:
             return
         elif color == RGB.GREEN and self.g > amount:
@@ -37,9 +37,28 @@ class Game:
             self.b = amount
         else:
             pass
+    def total_power(self):
+        return self.r * self.g * self.b
+    
+    def play_lowest_set(self,color : RGB,amount : int):
+        if color == RGB.RED and self.r < amount:
+            return
+        elif color == RGB.GREEN and self.g < amount:
+            return
+        elif color == RGB.BLUE and self.b < amount:
+            return
+        
+        if color == RGB.RED:
+            self.r = amount
+        elif color == RGB.GREEN:
+            self.g = amount
+        elif color == RGB.BLUE:
+            self.b = amount
+        else:
+            pass
 
     def __str__(self) -> str:
-        return f"Game {self.index}: {self.r},{self.g},{self.b} - {self.is_possible}"
+        return f"Game {self.index}: {self.r},{self.g},{self.b} - {self.is_possible} - {self.total_power()}"
 
     def is_not_possible_with(self,r,g,b):
         if self.r > r or self.g > g or self.b > b:
@@ -61,8 +80,8 @@ class CubeFinder:
             if possible:
                 self.possible_games.append(game)
         id_sum = 0
-        for game in self.possible_games:
-            id_sum += game.index
+        for game in self.games:
+            id_sum += game.total_power()
         print(id_sum)
 
     def load_input(self):
@@ -81,7 +100,7 @@ class CubeFinder:
                             amount_color = cube.strip().split(" ")
                             amount = int(amount_color[0])
                             color = rgb_in_words[amount_color[1]]
-                            game.play_set(color,amount)
+                            game.play_highest_set(color,amount)
                     
                     self.games.append(game)
 
